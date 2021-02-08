@@ -1,0 +1,21 @@
+{
+  "name": "fs-open-blog_server",
+  "version": "1.0.0",
+  "description": "blog_server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abdullahi Sulyman",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.11.15",
+    "nodemon": "^2.0.7"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "{}"
+  ]
+}
