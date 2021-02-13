@@ -21,7 +21,7 @@ beforeEach(async () => {
   await Blog.deleteMany({})
   let blogObject = new Blog(initialBlogs[0])
   await blogObject.save()
-  blogObject = new Note(initialBlogs[1])
+  blogObject = new Blog(initialBlogs[1])
   await blogObject.save()
 })
 
@@ -33,16 +33,32 @@ test('blog are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-test('there are two notes', async () => {
-  const response = await api.get('/api/notes')
+test('there are two blogs', async () => {
+  const response = await api.get('/api/blog')
 
   expect(response.body).toHaveLength(2)
 })
 
-test('the first note is about HTTP methods', async () => {
-  const response = await api.get('/api/notes')
+test('the first blog is about HTTP methods', async () => {
+  const response = await api.get('/api/blog')
 
   expect(response.body[0].content).toBe('HTML is easy')
+})
+
+test('all notes are returned', async () => {
+  const response = await api.get('/api/notes')
+
+  expect(response.body).toHaveLength(initialNotes.length)
+})
+
+
+test('a specific note is within the returned notes', async () => {
+  const response = await api.get('/api/notes')
+
+  const contents = response.body.map(r => r.content)
+  expect(contents).toContain(
+    'Browser can execute only Javascript'
+  )
 })
 
 afterAll(() => {
