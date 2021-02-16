@@ -7,15 +7,22 @@ blogRouter.get("/", async (request, response) => {
     .catch((error) => next(error));
 });
 
-blogRouter.post("/", (request, response) => {
+blogRouter.post("/", (request, response, next) => {
   const blog = new Blog(request.body);
+ 
+  const blog = new Blog ({
+    content: body.content,
+    important: body.important || false,
+    date: new Date(),
+  })
 
-  blog
-    .save()
-    .then((result) => {
-      response.status(201).json(result);
-    })
-    .catch((error) => next(error));
+try {
+  const saveBlog = await blog.save()
+  response.json(saveBlog)
+}catch(exception) {
+next(exception)
+}
+
 });
 
 module.exports = blogRouter;
