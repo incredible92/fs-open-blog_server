@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const express = require('express');
+require('express-async-errors')
 const cors = require('cors');
 const supertest = require('supertest');
 const api = supertest(app)
