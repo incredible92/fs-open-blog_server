@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
-import supertest from "supertest"
+const supertest = require('supertest')
 import app from "../app"
-const api = supertest(app)
 const Blog = require('../models/blog')
+
+const api = supertest(app)
 
 const blogs = [
   {
