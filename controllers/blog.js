@@ -7,14 +7,10 @@ blogRouter.get("/", async (request, response) => {
     .catch((error) => next(error));
 });
 
-blogRouter.post("/", (request, response, next) => {
-  const blog = new Blog(request.body);
+blogRouter.post("/", async(request, response, next) => {
+  let blog = request.body;
  
-  const blog = new Blog ({
-    content: body.content,
-    important: body.important || false,
-    date: new Date(),
-  })
+   blog = new Blog (blog)
 
 try {
   const saveBlog = await blog.save()
