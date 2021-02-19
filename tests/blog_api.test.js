@@ -5,6 +5,8 @@ const Blog = require('../models/blog')
 
 const api = supertest(app)
 
+
+
 const blogs = [
   {
     _id: '5a422a851b54a676234d17f7',
@@ -57,8 +59,26 @@ describe('GET /blogs', function () {
     const blogs = await api.get('/api/blogs');
     expect(blogs.body[0].id).toBeDefined();
   });
-  
+
 });
+
+describe ('POST /blogs', function() {
+  test(' url successfully creates a new blog post', async() => {
+    const testBlog = {
+      title: 'test blog post',
+      author: 'Abdullahi Sulyman',
+      url: 'http:/incredible.org.ng',
+      likes: 0
+    }
+    const response = await api.post('/api/blogs')
+    send(testBlog)
+    set('accept', 'application/json')
+    expect(201)
+
+    expect(response.body.title).toBe(testBlog.title)
+
+  })
+})
 
 
 afterAll(() => {
