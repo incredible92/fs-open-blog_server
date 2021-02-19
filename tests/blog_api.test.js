@@ -47,7 +47,19 @@ describe('GET /blogs', function () {
       .expect(200)
       .expect('Content-Type', /application\/json/);
   });
-})
+
+  test('returns the correct number of blogs', async () => {
+    const blogs = await api.get('/api/blogs');
+    expect(blogs.body.length).toBe(3);
+  });
+
+  test('blogs have an unique identifier id property', async () => {
+    const blogs = await api.get('/api/blogs');
+    expect(blogs.body[0].id).toBeDefined();
+  });
+  
+});
+
 
 afterAll(() => {
   mongoose.connection.close()
