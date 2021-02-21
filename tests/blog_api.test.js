@@ -78,8 +78,27 @@ describe ('POST /blogs', function() {
     expect(response.body.title).toBe(testBlog.title)
 
   })
+
 })
 
+describe('Like property of blogs', function () {
+  test('should default to 0 if likes are missing', async () => {
+    const newBlogPost = {
+      title: 'New blog Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+    };
+
+    const blogsList = await api
+      .post('/api/blogs')
+      .send(newBlogPost)
+      .set('Authorization', `Bearer ${token}`)
+      .set('Accept', 'application/json')
+      .expect(201);
+
+    expect(blogsList.body).toHaveProperty('likes', 0);
+  });
+})
 
 afterAll(() => {
   mongoose.connection.close()
