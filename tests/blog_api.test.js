@@ -96,7 +96,7 @@ describe('Like property of blogs', function () {
       .set('Accept', 'application/json')
       .expect(201);
 
-    
+    expect(blogsList.body).toHaveProperty('likes', 0);
   });
 })
 
