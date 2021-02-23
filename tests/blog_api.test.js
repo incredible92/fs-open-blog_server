@@ -34,6 +34,7 @@ const blogs = [
     __v: 0,
   },
 ];
+let token;
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -71,9 +72,10 @@ describe ('POST /blogs', function() {
       likes: 0
     }
     const response = await api.post('/api/blogs')
-    send(testBlog)
-    set('accept', 'application/json')
-    expect(201)
+    .send(testBlog)
+    .set('Authorization', `Bearer ${token}`)
+    .set('accept', 'application/json')
+    .expect(201)
 
     expect(response.body.title).toBe(testBlog.title)
 
@@ -98,7 +100,57 @@ describe('Like property of blogs', function () {
 
     expect(blogsList.body).toHaveProperty('likes', 0);
   });
-})
+
+  test('should return given like', async () => {
+    const newBlogPost = {
+      title: 'New blog Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+      likes: 16,
+    };
+
+    const blogsList = await api
+      .post('/api/blogs')
+      .send(newBlogPost)
+      .set('Authorization', `Bearer ${token}`)
+      .set('Accept', 'application/json')
+      .expect(201);
+
+    expect(blogsList.body).toHaveProperty('likes', 16);
+  });
+});
+
+describe('Required properties missing', function () {
+  test('should return status code 400 Bad Request when title property is missing', async () => {
+    const newBlogPost = {
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlogPost)
+      .set('Authorization', `Bearer ${token}`)
+      .set('Accept', 'application/json')
+      .expect(400);
+  });
+
+  test('should return status code 400 Bad Request when url property is missing', async () => {
+    const newBlogPost = {
+      title: 'New blog Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlogPost)
+      .set('Authorization', `Bearer ${token}`)
+      .set('Accept', 'application/json')
+      .expect(400);
+  });
+});
+
+
 
 afterAll(() => {
   mongoose.connection.close()
