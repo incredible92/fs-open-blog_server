@@ -47,8 +47,8 @@ describe('GET /blogs', function () {
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
+      expect(200)
+      expect('Content-Type', /application\/json/);
   });
 
   test('returns the correct number of blogs', async () => {
@@ -75,7 +75,7 @@ describe ('POST /blogs', function() {
     .send(testBlog)
     .set('Authorization', `Bearer ${token}`)
     .set('accept', 'application/json')
-    .expect(201)
+    expect(201)
 
     expect(response.body.title).toBe(testBlog.title)
 
@@ -96,7 +96,7 @@ describe('Like property of blogs', function () {
       .send(newBlogPost)
       .set('Authorization', `Bearer ${token}`)
       .set('Accept', 'application/json')
-      .expect(201);
+      expect(201);
 
     expect(blogsList.body).toHaveProperty('likes', 0);
   });
@@ -114,7 +114,7 @@ describe('Like property of blogs', function () {
       .send(newBlogPost)
       .set('Authorization', `Bearer ${token}`)
       .set('Accept', 'application/json')
-      .expect(201);
+      expect(201);
 
     expect(blogsList.body).toHaveProperty('likes', 16);
   });
@@ -132,7 +132,7 @@ describe('Required properties missing', function () {
       .send(newBlogPost)
       .set('Authorization', `Bearer ${token}`)
       .set('Accept', 'application/json')
-      .expect(400);
+      expect(400);
   });
 
   test('should return status code 400 Bad Request when url property is missing', async () => {
@@ -146,7 +146,7 @@ describe('Required properties missing', function () {
       .send(newBlogPost)
       .set('Authorization', `Bearer ${token}`)
       .set('Accept', 'application/json')
-      .expect(400);
+      expect(400);
   });
 });
 
