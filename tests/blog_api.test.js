@@ -150,6 +150,59 @@ describe('Required properties missing', function () {
   });
 });
 
+describe('DELETE /blogs', function () {
+  test('should delete a blog', async () => {
+    const newBlogPost = {
+      title: 'New blog Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+      likes: 18,
+    };
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlogPost);
+
+    const blogsAtStart = await helper.blogsInDb();
+    const idToDelete = blogsAtStart[blogsAtStart.length - 1].id;
+    await api
+      .delete(`/api/blogs/${idToDelete}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtStart).toHaveLength(blogsAtEnd.length + 1);
+  });
+
+  describe('update a blog',() => {
+    test('without blog likes added',async() => {
+      const blogsAtStart = await helper.blogsInDB()
+      const blogToUpdate = blogsAtStart[0]
+      const noBlogLikes = { title: 'arigato masarimasem', author: 'ichimaru gin' }
+      await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(noBlogLikes)
+        .expect(404)
+      const likesUpdate = { likes: 30 }
+  
+      const blogsAtEnd = await helper.blogsInDB()
+      const titles = blogsAtEnd.map(blog => blog.title)
+      expect(titles).not.toContain(noBlogLikes.title)
+  
+      const response= await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(likesUpdate)
+        .expect(200)
+        .expect('Content-Type',/application\/json/)
+      const latestBlogs = await helper.blogsInDB()
+      expect(response.body.likes).toBe(latestBlogs[0].likes)
+    })
+  })
+})
+
+
+
 
 
 afterAll(() => {
