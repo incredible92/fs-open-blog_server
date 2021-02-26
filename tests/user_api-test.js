@@ -25,3 +25,15 @@ beforeEach(async() => {
 
   await Promise.all(promiseArray);
 })
+
+describe('Get all user', () => {
+    test('should return all user', async () => {
+        await api
+        .get('/api/users')
+        .expect(200)
+        .expect('content-type', /application\/ json/)
+
+        expect(user.body.length),tobe(initialUsers.length)
+
+    })
+})

@@ -5,7 +5,7 @@ const cors = require('cors');
 const config = require('./utils/config');
 const logger = require('./utils/logger');
 const blogRouter = require('./controllers/blog');
-const usersRouter = require('./controllers/user')
+const userRouter = require('./controllers/user')
 const middleware = require('./utils/middleware');
 
 const app = express();
