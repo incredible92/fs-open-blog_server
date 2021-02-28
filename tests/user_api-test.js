@@ -56,6 +56,19 @@ describe('Create new user', () => {
     expect(createdUser.body.name).toBe(newUser.name);
     expect(createdUser.body.username).toBe(newUser.username);
   });
+
+  test('should not create user to db if it is not valid, already existing', async () => {
+    const newUser = {
+      name: 'Michael Scott',
+      username: 'worldsBestBoss',
+      password: 'dementors',
+    };
+
+    await api.post('/api/users').send(newUser);
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toHaveLength(initialUsersList.length);
+  });
 })
 
 afterAll(async () => {
