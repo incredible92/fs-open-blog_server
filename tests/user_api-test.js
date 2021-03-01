@@ -69,6 +69,54 @@ describe('Create new user', () => {
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toHaveLength(initialUsersList.length);
   });
+
+  test('should return an error if username is not provided', async () => {
+    const newUser = {
+      name: 'Stanley Hudson',
+      password: 'didIStutter',
+    };
+
+    const createdUser = await api.post('/api/users').send(newUser);
+    expect(createdUser.status).toBe(400);
+    expect(createdUser.body.error).toBe('username is missing');
+  });
+
+  test('should return an error if password is not provided', async () => {
+    const newUser = {
+      name: 'Kelly Kapoor',
+      username: 'howDareYou',
+    };
+
+    const createdUser = await api.post('/api/users').send(newUser);
+    expect(createdUser.status).toBe(400);
+    expect(createdUser.body.error).toBe('password is missing');
+  });
+
+  test('should return an error if username has less than 3 characters', async () => {
+    const newUser = {
+      name: 'Dwight Schrute',
+      username: 'no',
+      password: 'employeeOfTheMonth',
+    };
+
+    const createdUser = await api.post('/api/users').send(newUser);
+
+    expect(createdUser.status).toBe(400);
+    expect(createdUser.body.error).toBe('username must be at least 3 characters long');
+  });
+
+  test('should return an error if password has less than 3 characters', async () => {
+    const newUser = {
+      name: 'Jim Halpert',
+      username: 'masterOfLeavingPartyEarly',
+      password: 'ma',
+    };
+
+    const createdUser = await api.post('/api/users').send(newUser);
+
+    expect(createdUser.status).toBe(400);
+    expect(createdUser.body.error).toBe('password must be at least 3 characters long');
+  });
 })
 
 afterAll(async () => {
