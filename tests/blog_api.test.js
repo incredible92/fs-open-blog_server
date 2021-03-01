@@ -1,7 +1,10 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const bcrypt = require('bcryptjs');
 const app =  require("../app")
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const helper = require('../utils/test_helper')
 
 const api = supertest(app)
 
@@ -41,6 +44,20 @@ beforeEach(async () => {
   await new Blog(blogs[0]).save();
   await new Blog(blogs[1]).save();
   await new Blog(blogs[2]).save();
+
+  await User.deleteMany({});
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash('testPassword', saltRounds);
+  const user = new User({ username: 'testUser', passwordHash });
+
+  await user.save();
+
+  await api
+    .post('/api/login')
+    .send({ username: 'testUser', password: 'testPassword' })
+    .then((response) => {
+      token = response.body.token;
+    });
 })
 
 describe('GET /blogs', function () {
